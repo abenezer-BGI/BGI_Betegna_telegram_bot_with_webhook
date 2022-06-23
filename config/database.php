@@ -63,6 +63,46 @@ return [
             ]) : [],
         ],
 
+        'device_inventory' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DEVICE_INVENTORY_DB_HOST', '10.10.1.48'),
+            'port' => env('DEVICE_INVENTORY_DB_PORT', '3306'),
+            'database' => env('DEVICE_INVENTORY_DB_DATABASE', 'forge'),
+            'username' => env('DEVICE_INVENTORY_DB_USERNAME', 'forge'),
+            'password' => env('DEVICE_INVENTORY_DB_PASSWORD', ''),
+            'unix_socket' => env('DEVICE_INVENTORY_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'telecom_bill' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('TELECOM_BILL_DB_HOST', '10.10.1.48'),
+            'port' => env('TELECOM_BILL_DB_PORT', '3306'),
+            'database' => env('TELECOM_BILL_DB_DATABASE', 'forge'),
+            'username' => env('TELECOM_BILL_DB_USERNAME', 'forge'),
+            'password' => env('TELECOM_BILL_DB_PASSWORD', ''),
+            'unix_socket' => env('TELECOM_BILL_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
@@ -74,7 +114,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            'search_path' => 'public',
+            'schema' => 'public',
             'sslmode' => 'prefer',
         ],
 
@@ -89,8 +129,18 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
-            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
+        'eLeader' => [
+            'driver' => 'sqlsrv',
+            'host' => env('eLEADER_DB_HOST', 'localhost'),
+            'port' => env('eLEADER_DB_PORT', '1433'),
+            'database' => env('eLEADER_DB_DATABASE', 'forge'),
+            'username' => env('eLEADER_DB_USERNAME', 'forge'),
+            'password' => env('eLEADER_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
         ],
 
     ],

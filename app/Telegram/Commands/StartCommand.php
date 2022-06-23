@@ -6,6 +6,7 @@ namespace App\Telegram\Commands;
 
 use App\Models\BotStatus;
 use App\Models\BotUser;
+use App\Models\ELeader;
 use App\Telegram\UpdateHandlers\eLeader\BotELeaderCallbackHandler;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
@@ -29,7 +30,7 @@ class StartCommand extends Command
     public function handle()
     {
         try {
-            if (BotUser::query()->firstWhere("chat_id", "=", $this->update->message->chat->id)->exists()) {
+            if (!is_null(BotUser::query()->firstWhere("chat_id", "=", $this->update->message->chat->id))) {
                 $this->welcome_message($this->update);
             } else {
                 $bot_user = BotUser::query()->create(

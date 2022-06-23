@@ -11,6 +11,8 @@ class ELeader extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = "e_leaders";
+
     protected $fillable = [
         'fidelity_id',
         'deleted_by',

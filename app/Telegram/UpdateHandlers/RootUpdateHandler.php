@@ -9,8 +9,11 @@ use App\Models\BotUser;
 use App\Telegram\Commands\StartCommand;
 use App\Telegram\UpdateHandlers\eLeader\BotELeaderCallbackHandler;
 use App\Telegram\UpdateHandlers\eLeader\BotELeaderUpdateHandler;
+use App\Traits\TelegramCustomTrait;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
 
@@ -25,6 +28,8 @@ class RootUpdateHandler
      * @var Update
      */
     public $update;
+
+    use TelegramCustomTrait;
 
     public function __construct(Api $bot, Update $update)
     {
@@ -45,7 +50,7 @@ class RootUpdateHandler
                 $callbackData = $this->update->callback_query->data;
                 switch ($callbackData) {
                     case 'root':
-                        (new StartCommand($this->bot, $this->update))->welcome_message($update);
+                        (new StartCommand())->handle();
                         break;
                     case 'eLeader':
                         (new BotELeaderCallbackHandler())->request_phone_number($bot, $bot_user, $bot_status, $message, $update);
@@ -67,7 +72,6 @@ class RootUpdateHandler
                         break;
                 }
 
-                $this->answerCallbackQuery();
             } elseif ($this->update->isType("message")) {
                 $message = $this->update->message;
                 $bot_user = BotUser::query()->firstWhere('telegram_user_id', '=', $this->update->message->chat->id);

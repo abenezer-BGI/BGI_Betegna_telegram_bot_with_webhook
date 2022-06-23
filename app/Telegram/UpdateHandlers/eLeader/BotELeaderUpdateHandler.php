@@ -12,7 +12,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Nette\Utils\Random;
 use Telegram\Bot\Api;
+use Telegram\Bot\Exceptions\TelegramSDKException;
+use Telegram\Bot\Keyboard\Keyboard;
+use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
+use WeStacks\TeleBot\Objects\KeyboardButton;
+use WeStacks\TeleBot\Objects\ReplyKeyboardMarkup;
 
 class BotELeaderUpdateHandler
 {
@@ -64,9 +69,39 @@ class BotELeaderUpdateHandler
      * @param Update $update
      * @param Builder|Model $bot_status
      * @param Api $bot
+     * @throws TelegramSDKException
+     * @throws \WeStacks\TeleBot\Exceptions\TeleBotException
      */
     public function eLeader_starting_menu($update, $bot_status, $bot)
     {
+
+//        $keyboard = Keyboard::make()
+//            ->inline()
+//            ->row(
+//                    Keyboard::inlineButton([
+//                        'text' => '💎  እንቁ ብዛት',
+//                        'callback_data' => 'eLeader.enqu_amount',
+//                    ]),
+//                    Keyboard::inlineButton([
+//                        'text' => 'ℹ️  የቤቴ መረጃ',
+//                        'callback_data' => 'eLeader.client_info',
+//                    ]),
+//                    Keyboard::inlineButton([
+//                        'text' => 'ℹ️  የጉብኝት መረጃ',
+//                        'callback_data' => 'eLeader.visit_data',
+//                    ]),
+//                    Keyboard::inlineButton([
+//                        'text' => '📞  ደንበኞች አገልግሎት',
+//                        'callback_data' => 'eLeader.customer_service',
+//                    ])
+//            )->setResizeKeyboard(true);
+//
+//        $response = $bot->sendMessage([
+//            'chat_id' => $update->message->chat->id ?? $update->callback_query->message->chat->id,
+//            'text' => "ውድ የቢ.ጂ.አይ ቤተኛ ደንበኛችን እንኳን ወደ ቢ.ጂ.አይ ቤተኛ ቴሌግራም ቦታችን በሰላም መጡ።" . chr(10) . "ቢ.ጂ.አይ ቤተኛን በተመለከተ ምን ማወቅ ይፈልጋሉ?",
+//            'reply_markup' => $keyboard
+//        ]);
+
         $bot->sendMessage([
             'chat_id' => $update->message->chat->id ?? $update->callback_query->message->chat->id,
             'text' => 'ውድ የቢ.ጂ.አይ ቤተኛ ደንበኛችን እንኳን ወደ ቢ.ጂ.አይ ቤተኛ ቴሌግራም ቦታችን በሰላም መጡ።' . chr(10) .
@@ -86,7 +121,7 @@ class BotELeaderUpdateHandler
                     [
                         new KeyboardButton([
                             'text' => 'ℹ️  የጉብኝት መረጃ',
-//                            'callback_data' => 'eLeader.visit_data',
+                            'callback_data' => 'eLeader.visit_data',
                         ]),
                         new KeyboardButton([
                             'text' => '📞  ደንበኞች አገልግሎት',
@@ -106,7 +141,7 @@ class BotELeaderUpdateHandler
      * @param Builder|Model $bot_user
      * @param Builder|Model $bot_status
      * @param Update $update
-     * @throws ApiObjectException
+     * @throws TelegramSDKException
      */
     public function phone_number_request(Api $bot, $bot_user, $bot_status, Update $update)
     {
@@ -133,21 +168,20 @@ class BotELeaderUpdateHandler
                 curl_exec($curl);
 
                 Log::info($otp_message);
+                $keyboard = Keyboard::make()
+                    ->inline()
+                    ->row(
+                        Keyboard::inlineButton([
+                            'text' => '<< ተመለስ',
+                            'callback_data' => $bot_status->back_path,
+                        ])
+                    );
                 $bot->sendMessage([
                     'chat_id' => $update->message->chat->id,
                     'text' => 'ስልክዎን ስለላኩልን በጣም እናመሰግናለን።' . chr(10) .
                         'ያስገቡት ስልክ ቁጥር የእርስዎ እንደሆነ ለማረጋገጥ አጭር የጽሁፍ መልእክት ልከንበታል።' . chr(10) .
                         'መልእክቱ ሲደርሶት በውስጡ የተካተተውን የሚስጥር ቁጥር ይላኩልን።',
-                    'reply_markup' => new InlineKeyboardMarkup([
-                        'inline_keyboard' => [
-                            [
-                                new InlineKeyboardButton([
-                                    'text' => '<< ተመለስ',
-                                    'callback_data' => $bot_status->back_path,
-                                ]),
-                            ]
-                        ],
-                    ]),
+                    'reply_markup' => $keyboard,
                 ]);
 
                 $bot_status->update([
@@ -155,19 +189,19 @@ class BotELeaderUpdateHandler
                     'last_answer' => $otp_code,
                 ]);
             } else {
+                $keyboard = Keyboard::make()
+                    ->inline()
+                    ->row(
+                        Keyboard::inlineButton([
+                            'text' => '<< ተመለስ',
+                            'callback_data' => $bot_status->back_path,
+                        ])
+                    );
+
                 $bot->sendMessage([
                     'chat_id' => $update->message->chat->id,
                     'text' => 'ይቅርታ! ባስገቡት የስልክ ቁጥር የተመዘገብ ቤት የለም።',
-                    'reply_markup' => new InlineKeyboardMarkup([
-                        'inline_keyboard' => [
-                            [
-                                new InlineKeyboardButton([
-                                    'text' => '<< ተመለስ',
-                                    'callback_data' => $bot_status->back_path,
-                                ]),
-                            ],
-                        ],
-                    ]),
+                    'reply_markup' => $keyboard,
                 ]);
             }
         } else {
