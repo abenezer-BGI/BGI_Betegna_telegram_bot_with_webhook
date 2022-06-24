@@ -14,10 +14,7 @@ use Nette\Utils\Random;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Keyboard\Keyboard;
-use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
-use WeStacks\TeleBot\Objects\KeyboardButton;
-use WeStacks\TeleBot\Objects\ReplyKeyboardMarkup;
 
 class BotELeaderUpdateHandler
 {
@@ -75,64 +72,72 @@ class BotELeaderUpdateHandler
     public function eLeader_starting_menu($update, $bot_status, $bot)
     {
 
-//        $keyboard = Keyboard::make()
-//            ->inline()
-//            ->row(
-//                    Keyboard::inlineButton([
-//                        'text' => '💎  እንቁ ብዛት',
-//                        'callback_data' => 'eLeader.enqu_amount',
-//                    ]),
-//                    Keyboard::inlineButton([
-//                        'text' => 'ℹ️  የቤቴ መረጃ',
-//                        'callback_data' => 'eLeader.client_info',
-//                    ]),
-//                    Keyboard::inlineButton([
-//                        'text' => 'ℹ️  የጉብኝት መረጃ',
-//                        'callback_data' => 'eLeader.visit_data',
-//                    ]),
-//                    Keyboard::inlineButton([
-//                        'text' => '📞  ደንበኞች አገልግሎት',
-//                        'callback_data' => 'eLeader.customer_service',
-//                    ])
-//            )->setResizeKeyboard(true);
-//
-//        $response = $bot->sendMessage([
-//            'chat_id' => $update->message->chat->id ?? $update->callback_query->message->chat->id,
-//            'text' => "ውድ የቢ.ጂ.አይ ቤተኛ ደንበኛችን እንኳን ወደ ቢ.ጂ.አይ ቤተኛ ቴሌግራም ቦታችን በሰላም መጡ።" . chr(10) . "ቢ.ጂ.አይ ቤተኛን በተመለከተ ምን ማወቅ ይፈልጋሉ?",
-//            'reply_markup' => $keyboard
-//        ]);
+        $keyboard = Keyboard::make()
+            ->inline()
+            ->row(
+                Keyboard::inlineButton([
+                    'text' => '💎  እንቁ ብዛት',
+                    'callback_data' => 'eLeader.enqu_amount',
+                ]),
+                Keyboard::inlineButton([
+                    'text' => 'እንቁ እቃዎች',
+                    'callback_data' => 'eLeader.send_enqu_items',
+                ])
+            )
+            ->row(Keyboard::inlineButton([
+                'text' => 'ℹ️  የቤቴ መረጃ',
+                'callback_data' => 'eLeader.client_info',
+            ]))
+            ->row(Keyboard::inlineButton([
+                'text' => 'ℹ️  የጉብኝት መረጃ',
+                'callback_data' => 'eLeader.visit_data',
+            ]))
+            ->row(Keyboard::inlineButton([
+                'text' => '📞  ደንበኞች አገልግሎት',
+                'callback_data' => 'eLeader.customer_service',
+            ]))->setResizeKeyboard(true);
 
-        $bot->sendMessage([
+        $response = $bot->sendMessage([
             'chat_id' => $update->message->chat->id ?? $update->callback_query->message->chat->id,
-            'text' => 'ውድ የቢ.ጂ.አይ ቤተኛ ደንበኛችን እንኳን ወደ ቢ.ጂ.አይ ቤተኛ ቴሌግራም ቦታችን በሰላም መጡ።' . chr(10) .
-                'ቢ.ጂ.አይ ቤተኛን በተመለከተ ምን ማወቅ ይፈልጋሉ?',
-            'reply_markup' => new ReplyKeyboardMarkup([
-                'keyboard' => [
-                    [
-                        new KeyboardButton([
-                            'text' => '💎  እንቁ ብዛት',
-//                            'callback_data' => 'eLeader.enqu_amount',
-                        ]),
-                        new KeyboardButton([
-                            'text' => 'ℹ️  የቤቴ መረጃ',
-//                           'callback_data' => 'eLeader.client_info',
-                        ]),
-                    ],
-                    [
-                        new KeyboardButton([
-                            'text' => 'ℹ️  የጉብኝት መረጃ',
-                            'callback_data' => 'eLeader.visit_data',
-                        ]),
-                        new KeyboardButton([
-                            'text' => '📞  ደንበኞች አገልግሎት',
-//                            'callback_data' => 'eLeader.customer_service',
-                        ]),
-                    ],
-                ],
-                'resize_keyboard' => true,
-                'input_field_placeholder'=> 'ቢ.ጂ.አይ ቤተኛ',
-            ]),
+            'text' => "ውድ የቢ.ጂ.አይ ቤተኛ ደንበኛችን እንኳን ወደ ቢ.ጂ.አይ ቤተኛ ቴሌግራም ቦታችን በሰላም መጡ።" . chr(10) . "ቢ.ጂ.አይ ቤተኛን በተመለከተ ምን ማወቅ ይፈልጋሉ?",
+            'reply_markup' => $keyboard
         ]);
+
+//        $bot->sendMessage([
+//            'chat_id' => $update->message->chat->id ?? $update->callback_query->message->chat->id,
+//            'text' => 'ውድ የቢ.ጂ.አይ ቤተኛ ደንበኛችን እንኳን ወደ ቢ.ጂ.አይ ቤተኛ ቴሌግራም ቦታችን በሰላም መጡ።' . chr(10) .
+//                'ቢ.ጂ.አይ ቤተኛን በተመለከተ ምን ማወቅ ይፈልጋሉ?',
+//            'reply_markup' => new ReplyKeyboardMarkup([
+//                'keyboard' => [
+//                    [
+//                        new KeyboardButton([
+//                            'text' => 'እንቁ ብዛት',
+//                            'callback_data' => 'eLeader.enqu_amount',
+//                        ]),
+//                        new KeyboardButton([
+//                            'text' => 'የቤቴ መረጃ',
+//                            'callback_data' => 'eLeader.client_info',
+//                        ]),
+//                        new KeyboardButton([
+//                            'text' => 'እንቁ እቃዎች',
+//                            'callback_data' => 'eLeader.send_enqu_items',
+//                        ]),
+//                    ],
+//                    [
+//                        new KeyboardButton([
+//                            'text' => 'የጉብኝት መረጃ',
+//                            'callback_data' => 'eLeader.visit_data',
+//                        ]),
+//                        new KeyboardButton([
+//                            'text' => 'ደንበኞች አገልግሎት',
+//                            'callback_data' => 'eLeader.customer_service',
+//                        ]),
+//                    ],
+//                ],
+//                'resize_keyboard' => true,
+//                'input_field_placeholder' => 'ቢ.ጂ.አይ ቤተኛ',
+//            ]),
+//        ]);
     }
 
     /**

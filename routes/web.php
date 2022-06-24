@@ -19,6 +19,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 Route::post('/lutipxfegswfgpoygrzqkiphezeqmfbwhdrswxbazoegtfdskozlbmerpydkexcy/webhook', function () {
     // If the sent message is a command, this will run
     $update = Telegram::commandsHandler(true);
+    Log::info($update);
 
     // Else if it is a callback or a pure message, this will run
     if ((!is_null($update->message) and !is_null($update->message->text) and !str_starts_with($update->message->text, '/')) or !is_null($update->callback_query)) {

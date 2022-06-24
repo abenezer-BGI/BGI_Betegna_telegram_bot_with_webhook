@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
+use Telegram\Bot\Objects\InputMedia\InputMediaPhoto;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\Update;
 
@@ -59,7 +60,6 @@ class BotELeaderCallbackHandler
                                         where [_tbEleaderExportObjectParameters].FieldCode = 'OBJ_PARAM_7774424'
                                         and [_tbEleaderExportObjectParameters].FieldName = 'SMS phone number'
                                         and [_tbEleaderExportObjectParameters].FieldValue = '" . $bot_user->service_number . "'"));
-        Log::debug($eLeaderUserData->pluck("ObjectID")->first());
         $visitData = collect(DB::connection('eLeader')
             ->select("select _tbEleaderExportActivitiesProductTasks.ActivityID,
                                    _tbEleaderExportActivitiesProductTaskDetails.ProductID,
@@ -130,6 +130,7 @@ class BotELeaderCallbackHandler
      * @param Message $message
      * @param Update $update
      * @throws TelegramSDKException
+     * @throws \WeStacks\TeleBot\Exceptions\TeleBotException
      */
     public function request_phone_number(Api $bot, $bot_user, $bot_status, Message $message, Update $update)
     {
@@ -179,6 +180,29 @@ class BotELeaderCallbackHandler
         $bot->sendMessage([
             'chat_id' => $message->chat->id,
             'text' => $enquMessage,
+        ]);
+    }
+
+    /**
+     * @param Api $bot
+     * @param Builder|Model $bot_user
+     * @param Message $message
+     * @throws TelegramSDKException
+     */
+    public function send_enqu_items(Api $bot, Message $message)
+    {
+        $bot->sendMediaGroup([
+            'chat_id' => $message->chat->id,
+            'media' => [
+                new InputMediaPhoto([
+                    'type' => "photo",
+                    'media' => "AgACAgQAAxkBAAIBI2Kz_vEiasUVqjGtHN28x-9pByWWAAI0uDEb-xOgUZsNR3AfBGWqAQADAgADcwADKQQ"
+                ]),
+                new InputMediaPhoto([
+                    'type' => "photo",
+                    'media' => "AgACAgQAAxkBAAIBJGKz_vGfe31Em-wIDMywUa7RC5bKAAI1uDEb-xOgUYqRA_gVmkOhAQADAgADcwADKQQ"
+                ]),
+            ]
         ]);
     }
 

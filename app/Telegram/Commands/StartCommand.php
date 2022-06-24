@@ -14,6 +14,7 @@ use Telegram\Bot\Api;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Exceptions\TelegramOtherException;
 use Telegram\Bot\Exceptions\TelegramSDKException;
+use WeStacks\TeleBot\Exceptions\TeleBotException;
 
 class StartCommand extends Command
 {
@@ -83,6 +84,8 @@ class StartCommand extends Command
             try {
                 (new BotELeaderCallbackHandler())->request_phone_number($bot, $bot_user, $bot_status, $update->message, $update);
             } catch (TelegramSDKException $e) {
+                Log::debug($e->getMessage());
+            } catch (TeleBotException $e) {
                 Log::debug($e->getMessage());
             }
         }

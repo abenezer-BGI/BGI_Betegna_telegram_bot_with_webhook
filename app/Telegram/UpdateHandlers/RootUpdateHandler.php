@@ -13,8 +13,6 @@ use App\Traits\TelegramCustomTrait;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
-use Telegram\Bot\Exceptions\TelegramSDKException;
-use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
 
 class RootUpdateHandler
@@ -25,13 +23,13 @@ class RootUpdateHandler
     public $bot;
 
     /**
-     * @var Update
+     * @var
      */
     public $update;
 
     use TelegramCustomTrait;
 
-    public function __construct(Api $bot, Update $update)
+    public function __construct(Api $bot, $update)
     {
         $this->bot = $bot;
         $this->update = $update;
@@ -66,6 +64,9 @@ class RootUpdateHandler
                         break;
                     case 'eLeader.customer_service':
                         (new BotELeaderCallbackHandler())->customer_service_contact($bot, $message);
+                        break;
+                    case 'eLeader.send_enqu_items':
+                        (new BotELeaderCallbackHandler())->send_enqu_items($bot, $message);
                         break;
                     default:
                         $this->error_message($bot, $update, 'amharic');
@@ -106,7 +107,7 @@ class RootUpdateHandler
                 }
             }
         } catch (Exception $e) {
-            Log::error('Line: '.$e->getLine().' File:'.$e->getFile().'Message: '.$e->getMessage());
+            Log::error('Line: ' . $e->getLine() . ' File:' . $e->getFile() . 'Message: ' . $e->getMessage());
         }
 
     }
